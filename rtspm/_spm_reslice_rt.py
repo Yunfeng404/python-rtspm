@@ -100,7 +100,7 @@ def spm_reslice_rt(r, flags):
         temp_x1 = np.transpose(np.array(range(1, r0_dim[0] + 1), ndmin=2))
         x1 = np.tile(temp_x1, (1, r0_dim[1]))
         temp_x2 = np.transpose(np.array(range(1, r0_dim[1] + 1), ndmin=2))
-        x2 = np.transpose(np.tile(temp_x2, (1, r0_dim[1])))
+        x2 = np.transpose(np.tile(temp_x2, (1, r0_dim[0])))
 
         if int(flags['mean']):
             count = np.zeros(r0_dim)

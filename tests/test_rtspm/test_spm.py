@@ -1,7 +1,34 @@
 import numpy as np
+import importlib
 
 from rtspm import spm_realign_rt
 from rtspm import spm_reslice_rt
+
+
+def test_spm_reslice_supports_non_square_in_plane_dimensions(monkeypatch):
+    module = importlib.import_module("rtspm._spm_reslice_rt")
+    monkeypatch.setattr(
+        module.spm,
+        "bsplins",
+        lambda _coefficients, y1, _y2, _y3, _degree: np.ones(y1.shape),
+    )
+    dim = np.array([3, 5, 2])
+    identity = np.eye(4)
+    r = [
+        {"mat": identity, "dim": dim, "C": np.zeros(dim)},
+        {"mat": identity, "dim": dim, "C": np.zeros(dim)},
+    ]
+    flags = {
+        "interp": 1,
+        "wrap": np.zeros(3),
+        "mask": 1,
+        "mean": 0,
+        "which": 2,
+    }
+
+    result = spm_reslice_rt(r, flags)
+
+    assert result.shape == tuple(dim)
 
 
 def img_2d_to_3d(img2d, xdim_img_number, ydim_img_number, dim3d):
